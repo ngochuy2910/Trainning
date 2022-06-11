@@ -1,0 +1,1 @@
+g++ Control.cpp Cursor.cpp Model.cpp Player.cpp View.cpp
