@@ -70,20 +70,3 @@ void View::display()
     }
 };
 
-// int main()
-// {
-//     View view; 
-//     view.setBoard();
-//     char keySpace ;
-//     while(1)
-//     {
-  
-//         view.setOXByCursor();
-//         view.cursor.move();
-        
-//         system("cls");
-
-//         view.display();
-//         Sleep(50);
-//     } 
-// }

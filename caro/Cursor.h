@@ -18,5 +18,5 @@ class Cursor
         void setX(int x);
         void setY(int y);
         bool move();// bắt sự kiện từ bàn phím .
-        // void displayCursor();
+    
 };

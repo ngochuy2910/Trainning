@@ -47,8 +47,7 @@ int main ()
             x -= 2 ;
         };
 
-        // if(key == )
-        //clearCursor();
+ 
         GoTo(x,y);
     }
 }

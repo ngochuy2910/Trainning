@@ -43,6 +43,7 @@ bool Cursor::move()
                 this->x += 1 ; // down
                 break;
             case 27:
+                //cout<< "Exit"<<endl;
                 return 0; // Nhan esc de thoat
         }
     return 1 ;

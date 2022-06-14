@@ -7,16 +7,20 @@ class Player
 {
     private:
         string name; 
-        bool luotChoi ;
-        bool isWin ;
+        int numOfWin;
+        int numOfLose;
 
     public:
-        Player();
-        void setName();
+        Player(string name);
+        void setName(string name);
         string getName();
-        void setLuot();
-        // bool isWin(); 
+        
+        void setNumOfWin(int numOfWin);
+        int getNumOfWin();
+        void setNumOfLose(int numOfLose);
+        int getNumOfLose();
+        float rateWin();
 
-
+        void display();
 
 };

@@ -1,19 +1,22 @@
 #include "Control.h"
+#include <fstream>
 
-void Control::AddPlayer()
+void Control::AddPlayer(shared_ptr<Player>player)
 {
-
+	model.addPlayer(player);
 };
 
-void Control::PlayGame()
+void Control::PlayGame(shared_ptr<Player>player1 ,shared_ptr<Player>player2 )
 {
     view.setBoard();
 	bool isPlayer1Win  ;
 
     while(true)
     {
-		// 
+		// Set con trỏ 
         view.setOXByCursor();
+
+
 		
 		// Check win 
 		if(view.getElementInBoard(view.cursor.getX(),view.cursor.getY() ) != '_') 
@@ -23,10 +26,12 @@ void Control::PlayGame()
 				if(view.getElementInBoard(view.cursor.getX(),view.cursor.getY()) == 'X')
 				{
 					isPlayer1Win = true ;
+					
 				}
 				else 
 				{
 					isPlayer1Win = false ; 
+					
 				}
 				// Thoat vong lap neu co ng thang 
 				break ;
@@ -39,6 +44,9 @@ void Control::PlayGame()
 
         system("cls");
 
+		// render screen 
+		cout<<player1->getName() << " <X> " << '\t' ;
+		cout<<player2->getName() << " <O> " << endl ;
         view.display();
         Sleep(50);
         
@@ -46,8 +54,21 @@ void Control::PlayGame()
 
 	if(isPlayer1Win == true)
 	{
-		cout << "CONGRATULATION PLAYER 1" << endl ;
-	} else cout << "CONGRATULATION PLAYER 2" << endl ;
+		cout << "CONGRATULATION "<<player1->getName() << endl ;
+		player1->setNumOfWin(player1->getNumOfWin() + 1 );
+		player2->setNumOfLose(player2->getNumOfLose() + 1 );
+	} else 
+	{
+		cout << "CONGRATULATION "<< player2->getName() << endl ;
+		player1->setNumOfLose(player1->getNumOfLose() + 1 );
+		player2->setNumOfWin(player2->getNumOfWin() + 1 );
+	}
+
+	// reset lại lượt
+	view.OX = true ; 
+
+	// Ghi file : 
+	model.WriteInFile();
 };
 
 bool Control::CheckWin(int x , int y) //x,y là tọa độ cờ hiện tại
@@ -122,7 +143,7 @@ bool Control::CheckWin(int x , int y) //x,y là tọa độ cờ hiện tại
 		j--;
 	}
 
-	if (count1 == 5 || count2 == 5|| count3 == 5 || count4 == 5) 
+	if (count1 == 4 || count2 == 4|| count3 == 4 || count4 == 4) 
 	{
 		return 1;
 	}
@@ -131,10 +152,14 @@ bool Control::CheckWin(int x , int y) //x,y là tọa độ cờ hiện tại
 	}
 };
 
-int main()
+void Control::showInforPlayer()
 {
-    Control control ; 
-
-	control.PlayGame();
-
+	model.showInfor();
 }
+
+
+Model Control::getModel()
+{
+	return this->model;
+}
+

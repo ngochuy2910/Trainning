@@ -10,10 +10,10 @@ class View
 {
     private: 
         char Board[10][10] ; 
-        static bool OX ; 
-        
     public:
+        static bool OX ; 
         static Cursor cursor ;
+
         void setBoard();
         char getElementInBoard(int x , int y);
     
@@ -23,7 +23,4 @@ class View
         
 };
 
-// bool View::OX = true ;
-
-// Cursor View::cursor(1,1);
 
