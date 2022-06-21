@@ -1,24 +1,4 @@
-#include "View.cpp"
-#include "Model.cpp"
-#include <fstream>
-
-using namespace std;
-
-class Control{
-    private:
-
-        View view;
-
-        Model model;
-
-    public:
-        void AddPlayer(shared_ptr<Player>player);
-        void PlayGame(shared_ptr<Player>player1 ,shared_ptr<Player>player2);
-        bool CheckWin(int &x ,int &y , char OX);
-        void showInforPlayer();
-        Model getModel();
-        
-};
+#include "Control.h"
 
 void Control::PlayGame(shared_ptr<Player>player1 ,shared_ptr<Player>player2)
 {
@@ -32,21 +12,31 @@ void Control::PlayGame(shared_ptr<Player>player1 ,shared_ptr<Player>player2)
     HANDLE       hStdInput  = NULL;
     HANDLE       hStdOutput = NULL;
     HANDLE       hEvent     = NULL;
-    DWORD        nRead;                                                
+    DWORD        nRead;                                                 
     COORD        xy;
 
 
     hStdInput=GetStdHandle(STD_INPUT_HANDLE);
     hStdOutput=GetStdHandle(STD_OUTPUT_HANDLE);
     view.cls(hStdOutput);
-    SetConsoleMode(hStdInput,ENABLE_ECHO_INPUT|ENABLE_LINE_INPUT|ENABLE_MOUSE_INPUT|ENABLE_EXTENDED_FLAGS);
+    SetConsoleMode(hStdInput,ENABLE_ECHO_INPUT|ENABLE_LINE_INPUT|ENABLE_MOUSE_INPUT|ENABLE_EXTENDED_FLAGS); //mode console
     FlushConsoleInputBuffer(hStdInput);
-    hEvent=CreateEvent(NULL,FALSE,FALSE,NULL);                   
+    hEvent=CreateEvent(NULL,FALSE,FALSE,NULL);                    
     HANDLE handles[2] = {hEvent, hStdInput};
+
+    // Set cursor
+    xy.X=0, xy.Y=1;
+    SetConsoleCursorPosition(hStdOutput,xy);
+
+    cout<<player1->getName()<<" <X> "<<'\t';
+    cout<<player2->getName()<<" <O> "<<endl;
+    view.DrawBoard();
+
+
 
     while(WaitForMultipleObjects(2,handles,FALSE,INFINITE))     
     {                                                    
-        ReadConsoleInput(hStdInput,ir,128,&nRead); 
+        ReadConsoleInput(hStdInput,ir,128,&nRead);  // lấy ra ir , ts1 vs 3: inout , 2 vs 4 output
 
 
         for(size_t i=0;i<nRead;i++)                             
@@ -54,20 +44,23 @@ void Control::PlayGame(shared_ptr<Player>player1 ,shared_ptr<Player>player2)
              
             if(ir[i].EventType == MOUSE_EVENT) 
             {                                 
-                    xy.X=0, xy.Y=1;                                     
-                    SetConsoleCursorPosition(hStdOutput,xy);
+                    
                     if((GetKeyState(VK_LBUTTON) & 0x8000) != 0)
                     {   
+                       
                         int x_mouse = ir[i].Event.MouseEvent.dwMousePosition.X / 4 ; 
                         int y_mouse = ir[i].Event.MouseEvent.dwMousePosition.Y - 1 ;
 
                         view.updateBoard(x_mouse, y_mouse ,turn);
-                        cout<<"x_mouse "<<x_mouse<<endl;
-                        cout<<"y_mouse "<<y_mouse<<endl;
+
 
                         char XO = view.getElementInBoard(y_mouse , x_mouse);
                         if(Control::CheckWin(x_mouse,y_mouse ,XO ) == 1 )
                         {
+                            int x_loc = 0;
+                            int y_loc = 12 ;
+                            view.gotoXY(x_loc,y_loc);
+
                             if(XO == 'X') {
                                 isPlayer1Win = true ; 
 
@@ -86,6 +79,8 @@ void Control::PlayGame(shared_ptr<Player>player1 ,shared_ptr<Player>player2)
 
                             model.WriteInFile();
 
+                            cout<< "Press esc to return menu "<<endl;
+
                             return;
                         }                  
 
@@ -94,9 +89,10 @@ void Control::PlayGame(shared_ptr<Player>player1 ,shared_ptr<Player>player2)
             }
             
         }
-        // cout<<"end"<<endl;
+      
         
     };
+
 
 }
 
@@ -122,7 +118,6 @@ bool Control::CheckWin(int &x ,int &y , char XO)
 		count1++;
 		j++;
 	}
-    cout<<"ngang"<<count1<<endl;
 
 	//check theo chieu doc
 	i = x, j = y;
@@ -138,7 +133,6 @@ bool Control::CheckWin(int &x ,int &y , char XO)
 		count2++;
 		i++;
 	}
-    cout<<"doc"<<count2<<endl;
 
 	//check dg cheo thu nhat
 	i = x, j = y;
@@ -197,8 +191,3 @@ Model Control::getModel()
 {
 	return this->model;
 }
-// int main()
-// {
-//     Control control ;
-//     control.PlayGame();
-// }

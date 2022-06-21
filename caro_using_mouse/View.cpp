@@ -1,58 +1,60 @@
-#include <iostream>
-#include <windows.h>
-#include <conio.h>
-
-#pragma once
-
-using namespace std;
-
-class View
-{
-    private: 
-        char Board[10][10] ; 
-    public:
-        
-        void SetBoard();
-        char getElementInBoard(int x , int y);
-        // void setOXByCursor();
-        void updateBoard( int &x_mouse , int &y_mouse , bool &turn);
-        void cls(HANDLE hStdOut);
-};
+#include "View.h"
 
 void View::SetBoard()
+{
+    //Set kí tự cho mỗi ô cờ
+    for(unsigned char i = 0 ; i < 10 ; i++)
+    {
+        for(int j = 0 ; j < 10 ; j++)
+        {
+            this->Board[i][j] = '_'; 
+        }
+
+    };
+};
+
+void View::DrawBoard()
 {
     //Set kí tự cho mỗi ô cờ
     for(int i = 0 ; i < 10 ; i++)
     {
         for(int j = 0 ; j < 10 ; j++)
         {
-            this->Board[i][j] = '_';
+            cout<<'|';
+            cout<<'_'<<Board[i][j]<<'_';
         }
+        cout<<endl ;
 
     };
 };
 
+void View::gotoXY(const int &x , const int &y)
+{
+    COORD cord;
+    cord.X = x;
+    cord.Y = y;
+    SetConsoleCursorPosition(GetStdHandle( STD_OUTPUT_HANDLE ),cord);
+
+}
+
 void View::updateBoard(int &x_mouse , int &y_mouse , bool &turn)
 {
-    for(int i = 0 ; i < 10 ; i++)
+    int x_location = 4 * x_mouse + 2 ;
+    int y_location = y_mouse + 1 ; 
+    View::gotoXY( x_location , y_location);
+    if(this->Board[y_mouse][x_mouse] == '_')
     {
-        for(int j = 0 ; j < 10 ; j++)
-        {
-            cout<<'|';
-            if(j == x_mouse && i == y_mouse )
-            {
-                // turn = !turn ;
-                if(turn){ 
-                    this->Board[i][j] = 'X' ;
-                }
-                else this->Board[i][j] = 'O';
-               // cout<<'_'<<Board[i][j]<<'_';
-               turn = !turn ;
-            }
-            cout<<'_'<<Board[i][j]<<'_';
+        if(turn){ 
+            this->Board[y_mouse][x_mouse] = 'X' ;
         }
-        cout<<endl ;
+        else this->Board[y_mouse][x_mouse] = 'O';
+        turn = !turn ;
     }
+    cout<<this->Board[y_mouse][x_mouse];
+    // turn = !turn ;
+
+
+
 }
 
 void View::cls(HANDLE hStdOut)

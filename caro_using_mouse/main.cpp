@@ -1,8 +1,9 @@
-#include "Control.cpp"
+#include "Control.h"
 
 int main()
 {
     int key;
+	char exit ;
    
 	Control control ; 
 	shared_ptr<Player>player1 ;
@@ -15,14 +16,13 @@ int main()
         cout<<"2. Show All Information of Players"<<endl;
 		cout<<"3. Find similar player "<<endl;
         cout<<"4. Exit "<<endl;
-		// system("cls");
 
         cin>> key;
 		system("cls");
         switch(key){
         case 1:
 		{
-			cout<<"-------Add Player---------"<<endl;
+			cout<<"-----------Add Player----------"<<endl;
 
 			cout<<" Add Player 1"<<endl;
 			// Nhập tên người chơi : 
@@ -58,18 +58,34 @@ int main()
 			}
 
 			// START GAME 
-			cout<<"-------Start Game---------"<<endl;
+			cout<<"---------Start Game-----------"<<endl;
 			control.PlayGame(player1,player2);
 
+    		exit = getch();
+			if(exit == 27)
+			{
+				system("cls");
+				break ;
+			}
 
-			break;
+
+			//break;
 		};
 
 		case 2:
 		{
 			cout<<"All infor of player "<<endl;
 			control.showInforPlayer();
-			break;
+			// break;
+
+			
+			cout<< "Press esc to return menu "<<endl;
+			exit = getch();
+			if(exit == 27)
+			{
+				system("cls");
+				break ;
+			}
 		}
 		case 3:
 		{
@@ -78,7 +94,14 @@ int main()
 			cin.ignore();
 			getline(cin,name);
 			control.getModel().findSimilarPlayer(name) ;
-			break;
+
+			cout<< "Press esc to return menu "<<endl;
+			exit = getch();
+			if(exit == 27)
+			{
+				system("cls");
+				break ;
+			}
 		}
 		case 4:
 		{
